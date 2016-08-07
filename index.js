@@ -5,8 +5,11 @@ require('dotenv').config();
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const cache = require('memory-cache');
 
 const twitter = require('./twitter');
+
+const getCacheKey = (tweetUrl, usernames) => `${tweetUrl}${usernames.sort().join('')}`;
 
 const app = express();
 
@@ -24,10 +27,18 @@ app.post('/api/get-tweets', (req, res) => {
     usernames = req.body.usernames.split(' ');
   }
 
+  const cacheKey = getCacheKey(tweetUrl, usernames);
+  const cached = cache.get(cacheKey);
+  if (cached) {
+    console.log(`Cache hit: ${cacheKey}`);
+    return res.json(cached);
+  }
+
   console.log(`Tweet URL: ${tweetUrl}\nUsernames: ${usernames}`);
 
   twitter.getTweets(tweetUrl, usernames)
     .then(tree => {
+      cache.put(cacheKey, tree, 30000);
       return res.json(tree);
     });
 });
