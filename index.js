@@ -4,6 +4,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const twitter = require('./twitter');
 
 const app = express();
 
