@@ -82,7 +82,7 @@ $(function() {
 
     var params = { 'tweeturl': tweetUrl, 'users': usernames.split(',').join(' ')}
     var str = jQuery.param( params );
-    window.history.pushState('', '', str);
+    window.history.pushState('', '', '?' + str);
 
     getTweets(tweetUrl, usernames);
   });
