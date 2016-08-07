@@ -1,5 +1,8 @@
 $(function() {
 
+  // User large version of jstree
+  $.jstree.defaults.core.themes.variant = "large";
+
   $('#view').click(function() {
     var tweetId = $('#tweet_id').val();
     var usernames = $('#usernames').val();
