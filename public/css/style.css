@@ -12,7 +12,7 @@ input {
   width: 400px;
 }
 
-button#view {
+button {
   margin-top: 10px;
   font-size: 16px;
 }

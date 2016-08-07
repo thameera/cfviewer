@@ -24,4 +24,9 @@ $(function() {
     });
   });
 
+  $('#clear').click(function() {
+    $('#tweet_id').val('');
+    $('#usernames').val('');
+  });
+
 });
