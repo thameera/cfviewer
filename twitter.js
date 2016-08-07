@@ -15,13 +15,14 @@ const T = new Twit({
 });
 
 const searchTweets = screennames => {
-  console.log(`Searching for tweets...`);
+  const query = screennames.join(' OR ');
+  console.log(`Searching for: ${query}`);
 
   let tweets = [];
   let round = 0;
 
   const search = max_id => {
-    const opts = { q: screennames.join(' OR '), count: 100, include_entities: false };
+    const opts = { q: query, count: 100, include_entities: false };
     if (max_id) opts.max_id = max_id;
     return T.get('search/tweets', opts);
   }

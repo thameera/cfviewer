@@ -15,13 +15,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/get', (req, res) => {
-  console.log('dd');
-  if (!req.body.tweetUrl || !req.body.usernames
-    || !req.body.tweetUrl.startsWith('https://twitter.com')) {
+  if (!req.body.tweetUrl || !req.body.tweetUrl.startsWith('https://twitter.com')) {
     return res.sendStatus(400);
   }
   const tweetUrl = req.body.tweetUrl;
-  const usernames = req.body.usernames.split(' ');
+  let usernames = [];
+  if (req.body.usernames.length) {
+    usernames = req.body.usernames.split(' ');
+  }
 
   console.log(`Tweet ID: ${tweetUrl}\nUsernames: ${usernames}`);
 
