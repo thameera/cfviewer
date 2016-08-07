@@ -61,7 +61,8 @@ const buildTree = (start_id, tweets) => {
       id: tweet.id_str,
       parent: parent,
       text: `[${tweet.user.screen_name}]: ${tweet.text}`,
-      icon: tweet.user.profile_image_url
+      icon: tweet.user.profile_image_url,
+      url: `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`
     });
   };
 

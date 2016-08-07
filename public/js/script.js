@@ -38,7 +38,20 @@ $(function() {
         }});
         loadedOnce = true;
       }
+
+      // Bind click on profile pic
+      $('#tree').bind('ready.jstree open_node.jstree', function(e, data) {
+        $('i.jstree-themeicon').unbind('click').click(function(e) {
+          // Get ID of selected tweet
+          var id =$(e.target).parent().attr('id').split('_')[0]
+          // Find tweet's URL
+          var url = res.data.filter(function(t) {return t.id === id})[0].url;
+          window.open(url,'_blank');
+        });
+      });
+
     });
+
   });
 
   $('#clear').click(function() {
