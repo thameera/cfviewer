@@ -8,16 +8,21 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  CFViewer
+  <div id="title">
+    CFViewer
+  </div>
 
-  <div>
-    Originating tweet ID:
-    <input type="text" id="tweet_id"/>
-  </div>
-  <div>
-    Usernames (space-separated):
-    <input type="text" id="usernames"/>
-  </div>
+  <table border="0">
+    <tr>
+      <td>Originating tweet ID:</td>
+      <td><input type="text" id="tweet_id" placeholder="eg: 761335670618984448"/></td>
+    </tr>
+    <tr>
+      <td>Usernames (space-separated):</td>
+      <td><input type="text" id="usernames" placeholder="eg: jack horse_js"/></td>
+    </tr>
+  </table>
+
   <div>
     <button id="view"/>View</button>
   </div>
