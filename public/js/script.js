@@ -1,7 +1,7 @@
 $(function() {
 
   // Pre-populate values from localStorage
-  $('#tweet_id').val(localStorage.getItem('tweetId') || '');
+  $('#tweet_url').val(localStorage.getItem('tweetUrl') || '');
   $('#usernames').val(localStorage.getItem('usernames') || '');
 
   // User large version of jstree
@@ -9,13 +9,13 @@ $(function() {
 
   $('#view').click(function() {
     $('#loading').show();
-    var tweetId = $('#tweet_id').val();
+    var tweetUrl = $('#tweet_url').val();
     var usernames = $('#usernames').val();
-    localStorage.setItem('tweetId', tweetId);
+    localStorage.setItem('tweetUrl', tweetUrl);
     localStorage.setItem('usernames', usernames);
 
     $.post('/get', {
-      tweetId: tweetId,
+      tweetUrl: tweetUrl,
       usernames: usernames
     }, function(data) {
       console.log(data);
@@ -25,7 +25,7 @@ $(function() {
   });
 
   $('#clear').click(function() {
-    $('#tweet_id').val('');
+    $('#tweet_url').val('');
     $('#usernames').val('');
   });
 

@@ -15,15 +15,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/get', (req, res) => {
-  if (!req.body.tweetId || !req.body.usernames) {
+  console.log('dd');
+  if (!req.body.tweetUrl || !req.body.usernames
+    || !req.body.tweetUrl.startsWith('https://twitter.com')) {
     return res.sendStatus(400);
   }
-  const tweetId = req.body.tweetId;
+  const tweetUrl = req.body.tweetUrl;
   const usernames = req.body.usernames.split(' ');
 
-  console.log(`Tweet ID: ${tweetId}\nUsernames: ${usernames}`);
+  console.log(`Tweet ID: ${tweetUrl}\nUsernames: ${usernames}`);
 
-  twitter.getTweets(tweetId, usernames)
+  twitter.getTweets(tweetUrl, usernames)
     .then(tree => {
       return res.json(tree);
     });

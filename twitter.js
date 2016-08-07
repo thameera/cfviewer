@@ -90,7 +90,9 @@ const buildTree = (start_id, tweets) => {
   };
 };
 
-const getTweets = (start_id, screennames) => {
+const getTweets = (start_url, screennames) => {
+  const start_id = start_url.substr(start_url.lastIndexOf('/')+1);
+
   return searchTweets(screennames)
     .then(tweets => {
       const uniqTweets = _.uniqBy(tweets, 'id_str');
