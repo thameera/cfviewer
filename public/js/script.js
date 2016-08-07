@@ -6,20 +6,19 @@ $(function() {
   $.jstree.defaults.core.themes.variant = "large";
 
   // Read a page's GET URL variables and return them as an associative array.
-  function getUrlVars()
+  var getUrlVars = function()
   {
-    var vars = [], hash;
+    var vars = {}, hash;
     var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for(var i = 0; i < hashes.length; i++)
-    {
-      hash = hashes[i].split('=');
-      vars.push(hash[0]);
+    hashes.forEach(function(el, idx, arr){
+      hash = arr[idx].split('=');
       vars[hash[0]] = hash[1];
-    }
+    });
+
     return vars;
   }
 
-  // Get the tweitter conversation given a tweet url and optionally usernames
+  // Get the twitter conversation given a tweet url and optionally usernames
   var getTweets = function(tweetUrl, usernames){
     $('#error').hide();
     $('#loading').show();

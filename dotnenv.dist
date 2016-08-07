@@ -1,4 +1,5 @@
 # copy this file to .env and update as appropriate
+APP_PORT=8081
 CON_KEY=
 CON_SEC=
 ACC_KEY=
