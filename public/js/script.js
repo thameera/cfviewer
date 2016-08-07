@@ -59,17 +59,6 @@ $(function() {
     });
   }
 
-  var urlVars = getUrlVars();
-  if (urlVars['tweeturl']){
-    var users = '';
-    var tweeturl = urlVars['tweeturl'];
-    if (urlVars['users']){
-      var users = urlVars['users'].split(",").join(' ');
-    }
-
-    getTweets(tweeturl, users);
-  }
-
   // Pre-populate values from localStorage
   $('#tweet_url').val(localStorage.getItem('tweetUrl') || '');
   $('#usernames').val(localStorage.getItem('usernames') || '');
@@ -85,6 +74,19 @@ $(function() {
     window.history.pushState('', '', '?' + str);
 
     getTweets(tweetUrl, usernames);
+  }
+
+  var urlVars = getUrlVars();
+  if (urlVars['tweeturl']){
+    var tweetUrl = urlVars['tweeturl'];
+    if (urlVars['users']){
+      var users = urlVars['users'].split(",").join(' ');
+    }
+
+    $('#tweet_url').val( decodeURIComponent(tweetUrl) || '');
+    $('#usernames').val(users || '');
+
+    updateTree();
   }
 
   $('#view').click(function() {
