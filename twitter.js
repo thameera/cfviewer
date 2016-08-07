@@ -65,6 +65,8 @@ const buildTree = (start_id, tweets) => {
     });
   };
 
+  const findQuoted = id => _.filter(tweets, { quoted_status_id_str: id }).map(t => t.id_str);
+
   const iterateForTweet = id => {
     const replies = _.remove(tweets, { in_reply_to_status_id_str: id });
 
@@ -73,16 +75,24 @@ const buildTree = (start_id, tweets) => {
     replies.forEach(r => {
       add(r, id);
       iterateForTweet(r.id_str);
+      findQuoted(r.id_str).forEach(id => iterateRoot(id));
     });
   };
 
-  // Find root tweet
-  const root = _.find(tweets, { id_str: start_id });
-  if (!root) return 'Root tweet not found';
+  const iterateRoot = root_id => {
+    console.log(`Iterating for root tweet: ${root_id}`);
+    // Find root tweet
+    const root = _.find(tweets, { id_str: root_id });
+    if (!root) return 'Root tweet not found';
 
-  add(root, '#');
+    findQuoted(root_id).forEach(id => iterateRoot(id));
 
-  iterateForTweet(root.id_str);
+    add(root, '#');
+
+    iterateForTweet(root.id_str);
+  };
+
+  iterateRoot(start_id);
 
   console.log(`Final tree length: ${tree.length}`);
 
