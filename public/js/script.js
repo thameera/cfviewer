@@ -74,7 +74,7 @@ $(function() {
   $('#tweet_url').val(localStorage.getItem('tweetUrl') || '');
   $('#usernames').val(localStorage.getItem('usernames') || '');
 
-  $('#view').click(function() {
+  var updateTree = function() {
     var tweetUrl = $('#tweet_url').val();
     var usernames = $('#usernames').val();
     localStorage.setItem('tweetUrl', tweetUrl);
@@ -85,11 +85,15 @@ $(function() {
     window.history.pushState('', '', '?' + str);
 
     getTweets(tweetUrl, usernames);
+  }
+
+  $('#view').click(function() {
+    updateTree();
   });
 
   // Bind Enter key press on text boxes
   $('#tweet_url, #usernames').keypress(function(e) {
-    if (e.keyCode === 13) getTweets();
+    if (e.keyCode === 13) updateTree();
   });
 
   // Select text on click
