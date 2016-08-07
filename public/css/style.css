@@ -20,3 +20,8 @@ button {
 #loading, #error {
   display: none;
 }
+
+#info {
+  margin-bottom: 15px;
+  display: none;
+}

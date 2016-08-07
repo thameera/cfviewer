@@ -33,6 +33,7 @@ $(function() {
       }
 
       $('#loading').hide();
+      $('#info').show();
       if (loadedOnce) {
         $('#tree').jstree(true).settings.core.data = res.data;
         $('#tree').jstree(true).refresh();
