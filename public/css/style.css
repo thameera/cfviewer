@@ -16,3 +16,7 @@ button#view {
   margin-top: 10px;
   font-size: 16px;
 }
+
+#loading {
+  display: none;
+}

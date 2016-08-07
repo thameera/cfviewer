@@ -4,6 +4,7 @@ $(function() {
   $.jstree.defaults.core.themes.variant = "large";
 
   $('#view').click(function() {
+    $('#loading').show();
     var tweetId = $('#tweet_id').val();
     var usernames = $('#usernames').val();
 
@@ -12,6 +13,7 @@ $(function() {
       usernames: usernames
     }, function(data) {
       console.log(data);
+      $('#loading').hide();
       $('#tree').jstree({ 'core' : data });
     });
   });
