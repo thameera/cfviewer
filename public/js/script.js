@@ -9,6 +9,11 @@ $(function() {
   // User large version of jstree
   $.jstree.defaults.core.themes.variant = "large";
 
+  // Select text on click
+  $('#tweet_url, #usernames').click(function() {
+    this.select();
+  });
+
   $('#view').click(function() {
     $('#loading').show();
     $('#error').hide();
