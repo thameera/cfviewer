@@ -91,7 +91,11 @@ const buildTree = (start_id, tweets) => {
 };
 
 const getTweets = (start_url, screennames) => {
-  const start_id = start_url.substr(start_url.lastIndexOf('/')+1);
+  const start_id = start_url.substring(start_url.lastIndexOf('/')+1);
+
+  // Make sure originating tweep is included in screennames array
+  const username = start_url.substring(20, start_url.indexOf('/status'))
+  if (!screennames.includes(username)) screennames.push(username);
 
   return searchTweets(screennames)
     .then(tweets => {
