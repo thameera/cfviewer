@@ -14,7 +14,7 @@ $(function() {
     this.select();
   });
 
-  $('#view').click(function() {
+  var getTweets = function() {
     $('#loading').show();
     $('#error').hide();
     var tweetUrl = $('#tweet_url').val();
@@ -58,6 +58,14 @@ $(function() {
 
     });
 
+  }
+
+  // Bind click on View button
+  $('#view').click(getTweets);
+
+  // Bind Enter key press on text boxes
+  $('#tweet_url, #usernames').keypress(function(e) {
+    if (e.keyCode === 13) getTweets();
   });
 
   $('#clear').click(function() {
