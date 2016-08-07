@@ -9,6 +9,7 @@ $(function() {
 
   $('#view').click(function() {
     $('#loading').show();
+    $('#error').hide();
     var tweetUrl = $('#tweet_url').val();
     var usernames = $('#usernames').val();
     localStorage.setItem('tweetUrl', tweetUrl);
@@ -19,6 +20,12 @@ $(function() {
       usernames: usernames
     }, function(data) {
       console.log(data);
+      if (typeof data === 'string') {
+        $('#error').show();
+        $('#loading').hide();
+        return;
+      }
+
       $('#loading').hide();
       $('#tree').jstree({ 'core' : data });
     });

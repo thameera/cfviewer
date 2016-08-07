@@ -17,6 +17,6 @@ button {
   font-size: 16px;
 }
 
-#loading {
+#loading, #error {
   display: none;
 }
