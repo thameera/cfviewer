@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "CFViewer",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "start": "node index.js",
+    "watch": "nodemon index.js"
+  },
   "author": "",
   "license": "MIT",
   "dependencies": {
@@ -13,5 +16,8 @@
     "express": "^4.14.0",
     "lodash": "^4.14.1",
     "twit": "^2.2.4"
+  },
+  "devDependencies": {
+    "nodemon": "^1.10.0"
   }
 }

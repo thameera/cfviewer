@@ -14,7 +14,7 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post('/get', (req, res) => {
+app.post('/api/get-tweets', (req, res) => {
   if (!req.body.tweetUrl || !req.body.tweetUrl.startsWith('https://twitter.com')) {
     return res.sendStatus(400);
   }
@@ -24,7 +24,7 @@ app.post('/get', (req, res) => {
     usernames = req.body.usernames.split(' ');
   }
 
-  console.log(`Tweet ID: ${tweetUrl}\nUsernames: ${usernames}`);
+  console.log(`Tweet URL: ${tweetUrl}\nUsernames: ${usernames}`);
 
   twitter.getTweets(tweetUrl, usernames)
     .then(tree => {
@@ -36,6 +36,6 @@ app.get('/', (req, res) => {
   res.sendfile('public/index.html');
 });
 
-app.listen(8081, () => {
+app.listen(process.env.APP_PORT, () => {
   console.log('Listening on port 8081!');
 });
