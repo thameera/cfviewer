@@ -1,5 +1,7 @@
 $(function() {
 
+  var loadedOnce = false;
+
   // Pre-populate values from localStorage
   $('#tweet_url').val(localStorage.getItem('tweetUrl') || '');
   $('#usernames').val(localStorage.getItem('usernames') || '');
@@ -18,16 +20,24 @@ $(function() {
     $.post('/get', {
       tweetUrl: tweetUrl,
       usernames: usernames
-    }, function(data) {
-      console.log(data);
-      if (typeof data === 'string') {
+    }, function(res) {
+      if (typeof res === 'string') {
         $('#error').show();
         $('#loading').hide();
         return;
       }
 
       $('#loading').hide();
-      $('#tree').jstree({ 'core' : data });
+      if (loadedOnce) {
+        $('#tree').jstree(true).settings.core.data = res.data;
+        $('#tree').jstree(true).refresh();
+      } else {
+        $('#tree').jstree({ 'core' : {
+          check_callback: true,
+          data: res.data
+        }});
+        loadedOnce = true;
+      }
     });
   });
 
