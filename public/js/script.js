@@ -9,6 +9,7 @@ $(function() {
       usernames: usernames
     }, function(data) {
       console.log(data);
+      $('#tree').jstree({ 'core' : data });
     });
   });
 

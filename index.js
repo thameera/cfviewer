@@ -20,7 +20,22 @@ app.post('/get', (req, res) => {
   }
   const tweetId = req.body.tweetId;
   const usernames = req.body.usernames.split(' ');
-  res.json({});
+  res.json({
+    'data' : [
+      'Simple root node',
+      {
+        'text' : 'Root node 2',
+        'state' : {
+          'opened' : true,
+          'selected' : true
+        },
+        'children' : [
+          { 'text' : 'Child 1' },
+          'Child 2'
+        ]
+      }
+    ]
+  });
 });
 
 app.get('/', (req, res) => {
