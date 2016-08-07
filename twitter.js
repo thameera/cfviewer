@@ -2,6 +2,7 @@
 
 const Twit = require('twit');
 const Promise = require('bluebird');
+const _ = require('lodash');
 
 const MAX_SEARCH_ROUNDS = 5;
 
@@ -14,6 +15,7 @@ const T = new Twit({
 });
 
 const searchTweets = screennames => {
+  console.log(`Searching for tweets...`);
 
   let tweets = [];
   let round = 0;
@@ -48,13 +50,51 @@ const searchTweets = screennames => {
   return doARound();
 };
 
+const buildTree = (start_id, tweets) => {
+  console.log(`Building tree from ${tweets.length} tweets...`);
+
+  const tree = [];
+
+  const add = (tweet, parent) => {
+    tree.push({
+      id: tweet.id_str,
+      parent: parent,
+      text: `[${tweet.user.screen_name}]: ${tweet.text}`,
+      icon: tweet.user.profile_image_url
+    });
+  };
+
+  const iterateForTweet = id => {
+    const replies = _.remove(tweets, { in_reply_to_status_id_str: id });
+
+    if (!replies || !replies.length) return;
+
+    replies.forEach(r => {
+      add(r, id);
+      iterateForTweet(r.id_str);
+    });
+  };
+
+  // Find root tweet
+  const root = _.find(tweets, { id_str: start_id });
+  if (!root) return 'Root tweet not found';
+
+  add(root, '#');
+
+  iterateForTweet(root.id_str);
+
+  console.log(`Final tree length: ${tree.length}`);
+
+  return {
+    data: tree
+  };
+};
+
 const getTweets = (start_id, screennames) => {
   return searchTweets(screennames)
     .then(tweets => {
-      tweets.forEach(t => {
-        //console.log(`${t.user.screen_name} : ${t.text}`);
-      });
-      return tweets;
+      const uniqTweets = _.uniqBy(tweets, 'id_str');
+      return buildTree(start_id, uniqTweets);
     });
 };
 

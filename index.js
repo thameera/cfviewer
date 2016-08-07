@@ -20,22 +20,13 @@ app.post('/get', (req, res) => {
   }
   const tweetId = req.body.tweetId;
   const usernames = req.body.usernames.split(' ');
-  res.json({
-    'data' : [
-      'Simple root node',
-      {
-        'text' : 'Root node 2',
-        'state' : {
-          'opened' : true,
-          'selected' : true
-        },
-        'children' : [
-          { 'text' : 'Child 1' },
-          'Child 2'
-        ]
-      }
-    ]
-  });
+
+  console.log(`Tweet ID: ${tweetId}\nUsernames: ${usernames}`);
+
+  twitter.getTweets(tweetId, usernames)
+    .then(tree => {
+      return res.json(tree);
+    });
 });
 
 app.get('/', (req, res) => {
