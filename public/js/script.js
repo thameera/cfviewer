@@ -2,28 +2,29 @@ $(function() {
 
   var loadedOnce = false;
 
-  // Pre-populate values from localStorage
-  $('#tweet_url').val(localStorage.getItem('tweetUrl') || '');
-  $('#usernames').val(localStorage.getItem('usernames') || '');
-
-  // User large version of jstree
+  // Use large version of jstree
   $.jstree.defaults.core.themes.variant = "large";
 
-  // Select text on click
-  $('#tweet_url, #usernames').click(function() {
-    this.select();
-  });
+  // Read a page's GET URL variables and return them as an associative array.
+  function getUrlVars()
+  {
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+      hash = hashes[i].split('=');
+      vars.push(hash[0]);
+      vars[hash[0]] = hash[1];
+    }
+    return vars;
+  }
 
-  var getTweets = function() {
-    $('#loading').show();
+  // Get the tweitter conversation given a tweet url and optionally usernames
+  var getTweets = function(tweetUrl, usernames){
     $('#error').hide();
-    var tweetUrl = $('#tweet_url').val();
-    var usernames = $('#usernames').val();
-    localStorage.setItem('tweetUrl', tweetUrl);
-    localStorage.setItem('usernames', usernames);
-
-    $.post('/get', {
-      tweetUrl: tweetUrl,
+    $('#loading').show();
+    $.post('/api/get-tweets', {
+      tweetUrl: decodeURIComponent(tweetUrl),
       usernames: usernames
     }, function(res) {
       if (typeof res === 'string') {
@@ -57,20 +58,48 @@ $(function() {
       });
 
     });
-
   }
 
-  // Bind click on View button
-  $('#view').click(getTweets);
+  var urlVars = getUrlVars();
+  if (urlVars['tweeturl']){
+    var users = '';
+    var tweeturl = urlVars['tweeturl'];
+    if (urlVars['users']){
+      var users = urlVars['users'].split(",").join(' ');
+    }
+
+    getTweets(tweeturl, users);
+  }
+
+  // Pre-populate values from localStorage
+  $('#tweet_url').val(localStorage.getItem('tweetUrl') || '');
+  $('#usernames').val(localStorage.getItem('usernames') || '');
+
+  $('#view').click(function() {
+    var tweetUrl = $('#tweet_url').val();
+    var usernames = $('#usernames').val();
+    localStorage.setItem('tweetUrl', tweetUrl);
+    localStorage.setItem('usernames', usernames);
+
+    var params = { 'tweeturl': tweetUrl, 'users': usernames.split(',').join(' ')}
+    var str = jQuery.param( params );
+    window.history.pushState('', '', str);
+
+    getTweets(tweetUrl, usernames);
+  });
 
   // Bind Enter key press on text boxes
   $('#tweet_url, #usernames').keypress(function(e) {
     if (e.keyCode === 13) getTweets();
   });
 
+  // Select text on click
+  $('#tweet_url, #usernames').click(function() {
+    this.select();
+  });
+
   $('#clear').click(function() {
     $('#tweet_url').val('');
     $('#usernames').val('');
   });
-
 });
