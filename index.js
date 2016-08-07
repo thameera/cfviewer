@@ -8,8 +8,10 @@ const twitter = require('./twitter');
 
 const app = express();
 
+app.use(express.static('public'));
+
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.sendfile('public/index.html');
 });
 
 app.listen(8080, () => {
