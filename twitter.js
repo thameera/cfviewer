@@ -6,13 +6,32 @@ const _ = require('lodash');
 
 const MAX_SEARCH_ROUNDS = 5;
 
-const T = new Twit({
-  consumer_key: process.env.CON_KEY,
-  consumer_secret: process.env.CON_SEC,
-  access_token: process.env.ACC_KEY,
-  access_token_secret: process.env.ACC_SEC,
-  timeout_ms: 60*1000
-});
+/*
+ * Returns a function that would call the Twitter API with
+ * multiple Twitter apps in a round-robin manner
+ */
+const callAPI = (() => {
+  const numOfApps = Number(process.env.TW_APP_COUNT);
+  const apps = [];
+  for (let i = 0; i < numOfApps; i++) {
+    apps.push(new Twit({
+      consumer_key: process.env[`CON_KEY_${i}`],
+      consumer_secret: process.env[`CON_SEC_${i}`],
+      access_token: process.env[`ACC_KEY_${i}`],
+      access_token_secret: process.env[`ACC_SEC_${i}`],
+      timeout_ms: 60*1000
+    }));
+  }
+
+  let next = 0;
+  return (opts) => {
+    console.log( next);
+    const prom = apps[next].get('search/tweets', opts);
+    next++;
+    if (next === numOfApps) next = 0;
+    return prom;
+  };
+})();
 
 const searchTweets = screennames => {
   const query = screennames.join(' OR ');
@@ -24,7 +43,7 @@ const searchTweets = screennames => {
   const search = max_id => {
     const opts = { q: query, count: 100, include_entities: false };
     if (max_id) opts.max_id = max_id;
-    return T.get('search/tweets', opts);
+    return callAPI(opts);
   }
 
   const doARound = max_id => {
