@@ -43,10 +43,6 @@ app.post('/api/get-tweets', (req, res) => {
     });
 });
 
-app.get('/', (req, res) => {
-  res.sendfile('public/index.html');
-});
-
 app.listen(process.env.APP_PORT, () => {
-  console.log('Listening on port 8081!');
+  console.log('Listening on port ' + process.env.APP_PORT + '!');
 });
