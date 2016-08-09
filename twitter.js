@@ -98,7 +98,10 @@ const buildTree = (start_id, tweets) => {
       add(r, id);
       iterateForReplies(r.id_str);
       // Find tweets that quote current tweet and add to the tree
-      findQuoted(r.id_str).forEach(t => add(t, r.id_str));
+      findQuoted(r.id_str).forEach(t => {
+        add(t, r.id_str);
+        iterateForReplies(t.id_str);
+      });
     });
   };
 
