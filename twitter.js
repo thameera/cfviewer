@@ -88,6 +88,14 @@ const buildTree = (start_id, tweets) => {
   // Find all tweets which quote given tweet id
   const findQuoted = id => _.filter(tweets, { quoted_status_id_str: id});
 
+  // Find tweets that quote current tweet and add to the tree
+  const iterateForQuotingTweets = (id) => {
+    findQuoted(id).forEach(t => {
+      add(t, id);
+      iterateForReplies(id);
+    });
+  };
+
   const iterateForReplies = id => {
     // Get all replies to the tweet with given ID
     const replies = _.remove(tweets, { in_reply_to_status_id_str: id });
@@ -97,11 +105,7 @@ const buildTree = (start_id, tweets) => {
     replies.forEach(r => {
       add(r, id);
       iterateForReplies(r.id_str);
-      // Find tweets that quote current tweet and add to the tree
-      findQuoted(r.id_str).forEach(t => {
-        add(t, r.id_str);
-        iterateForReplies(t.id_str);
-      });
+      iterateForQuotingTweets(r.id_str);
     });
   };
 
@@ -115,6 +119,7 @@ const buildTree = (start_id, tweets) => {
     add(root, '#');
 
     iterateForReplies(root.id_str);
+    iterateForQuotingTweets(root.id_str);
   };
 
   iterateRoot(start_id);
