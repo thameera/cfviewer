@@ -85,17 +85,27 @@ const buildTree = (start_id, tweets) => {
     });
   };
 
-  const findQuoted = id => _.filter(tweets, { quoted_status_id_str: id }).map(t => t.id_str);
+  // Find all tweets which quote given tweet id
+  const findQuoted = id => _.filter(tweets, { quoted_status_id_str: id});
 
-  const iterateForTweet = id => {
+  // Find tweets that quote current tweet and add to the tree
+  const iterateForQuotingTweets = (id) => {
+    findQuoted(id).forEach(t => {
+      add(t, id);
+      iterateForReplies(t.id_str);
+    });
+  };
+
+  const iterateForReplies = id => {
+    // Get all replies to the tweet with given ID
     const replies = _.remove(tweets, { in_reply_to_status_id_str: id });
 
     if (!replies || !replies.length) return;
 
     replies.forEach(r => {
       add(r, id);
-      iterateForTweet(r.id_str);
-      findQuoted(r.id_str).forEach(id => iterateRoot(id));
+      iterateForReplies(r.id_str);
+      iterateForQuotingTweets(r.id_str);
     });
   };
 
@@ -103,13 +113,13 @@ const buildTree = (start_id, tweets) => {
     console.log(`Iterating for root tweet: ${root_id}`);
     // Find root tweet
     const root = _.find(tweets, { id_str: root_id });
-    if (!root) return 'Root tweet not found';
 
-    findQuoted(root_id).forEach(id => iterateRoot(id));
+    if (!root) return 'Root tweet not found';
 
     add(root, '#');
 
-    iterateForTweet(root.id_str);
+    iterateForReplies(root.id_str);
+    iterateForQuotingTweets(root.id_str);
   };
 
   iterateRoot(start_id);
