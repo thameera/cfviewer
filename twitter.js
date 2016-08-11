@@ -92,7 +92,7 @@ const buildTree = (start_id, tweets) => {
   const iterateForQuotingTweets = (id) => {
     findQuoted(id).forEach(t => {
       add(t, id);
-      iterateForReplies(id);
+      iterateForReplies(t.id_str);
     });
   };
 
