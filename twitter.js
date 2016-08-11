@@ -4,7 +4,7 @@ const Twit = require('twit');
 const Promise = require('bluebird');
 const _ = require('lodash');
 
-const MAX_SEARCH_ROUNDS = 5;
+const MAX_SEARCH_ROUNDS = process.env.MAX_SEARCH_ROUNDS;
 
 /*
  * Returns a function that would call the Twitter API with
@@ -33,7 +33,7 @@ const callAPI = (() => {
   };
 })();
 
-const searchTweets = screennames => {
+const searchTweets = (screennames, since_id) => {
   const query = screennames.join(' OR ');
   console.log(`Searching for: ${query}`);
 
@@ -43,6 +43,7 @@ const searchTweets = screennames => {
   const search = max_id => {
     const opts = { q: query, count: 100, include_entities: false };
     if (max_id) opts.max_id = max_id;
+    if (since_id) opts.since_id = since_id;
     return callAPI(opts);
   }
 
@@ -56,7 +57,7 @@ const searchTweets = screennames => {
 
         tweets = tweets.concat(result.data.statuses);
 
-        if (round === MAX_SEARCH_ROUNDS) {
+        if (result.data.statuses.length < 100 ||  round === MAX_SEARCH_ROUNDS) {
           return Promise.resolve(tweets);
         }
 
@@ -138,7 +139,11 @@ const getTweets = (start_url, screennames) => {
   const username = start_url.substring(20, start_url.indexOf('/status'))
   if (!screennames.includes(username)) screennames.push(username);
 
-  return searchTweets(screennames)
+  // Using since_id leaves out the root tweet from search result
+  // Need to deduct 1 to have it included. Since we are operating on
+  // numbers > MAX_SAFE_INTEGER we deduct 1000 to  be safe
+  const since_id = Number(start_id)-1000;
+  return searchTweets(screennames, `${since_id}`)
     .then(tweets => {
       const uniqTweets = _.uniqBy(tweets, 'id_str');
       return buildTree(start_id, uniqTweets);
