@@ -69,7 +69,7 @@ $(function() {
     localStorage.setItem('tweetUrl', tweetUrl);
     localStorage.setItem('usernames', usernames);
 
-    var params = { 'tweeturl': tweetUrl, 'users': usernames.split(',').join(' ')}
+    var params = { 'tweeturl': tweetUrl, 'users': usernames}
     var str = jQuery.param( params );
     window.history.pushState('', '', '?' + str);
 
@@ -80,7 +80,7 @@ $(function() {
   if (urlVars['tweeturl']){
     var tweetUrl = urlVars['tweeturl'];
     if (urlVars['users']){
-      var users = urlVars['users'].split(",").join(' ');
+      var users = urlVars['users'].split("%20").join(' ');
     }
 
     $('#tweet_url').val( decodeURIComponent(tweetUrl) || '');
