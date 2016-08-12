@@ -10,7 +10,6 @@ more convenient manner.
 
 The project was born on an interesting Sunday evening.
 
-CFViewer is built by [@thameera](https://twitter.com/thameera) with some contributions 
-from [@chanux](https://twitter.com/chanux)
+Built by [@thameera](https://twitter.com/thameera) and [@chanux](https://twitter.com/chanux)
 
 Now enjoy [CFV](http://cfv.bestatlk.com)
