@@ -1,6 +1,7 @@
 $(function() {
 
   var loadedOnce = false;
+  var treeCollapsed = true;
 
   // Use large version of jstree
   $.jstree.defaults.core.themes.variant = "large";
@@ -91,6 +92,24 @@ $(function() {
 
   $('#view').click(function() {
     updateTree();
+  });
+
+  var toggleCollapse = function(){
+    if(treeCollapsed){
+      $('#tree').jstree('open_all');
+      $('#toggleCollapse').html("-");
+      $('#toggleCollapse').prop('title', 'Collapse tree');
+      treeCollapsed = false;
+    } else {
+      $('#tree').jstree('close_all');
+      $('#toggleCollapse').html("+");
+      $('#toggleCollapse').prop('title', 'Expand tree');
+      treeCollapsed = true;
+    }
+  }
+
+  $('#toggleCollapse').click(function() {
+    toggleCollapse();
   });
 
   // Bind Enter key press on text boxes
