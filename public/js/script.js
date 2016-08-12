@@ -19,6 +19,13 @@ $(function() {
     return vars;
   }
 
+  var setParticipants = function(participants) {
+    var str = participants.map(function(p) {
+      return p.name + '(' + p.count + ')'
+    }).join(', ');
+    $('#participants').html('<strong>Participants:</strong> ' + str);
+  };
+
   // Get the twitter conversation given a tweet url and optionally usernames
   var getTweets = function(tweetUrl, usernames){
     $('#error').hide();
@@ -35,13 +42,15 @@ $(function() {
 
       $('#loading').hide();
       $('#info').show();
+      setParticipants(res.participants);
+
       if (loadedOnce) {
-        $('#tree').jstree(true).settings.core.data = res.data;
+        $('#tree').jstree(true).settings.core.data = res.tree;
         $('#tree').jstree(true).refresh();
       } else {
         $('#tree').jstree({ 'core' : {
           check_callback: true,
-          data: res.data
+          data: res.tree
         }});
         loadedOnce = true;
       }

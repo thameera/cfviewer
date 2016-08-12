@@ -4,6 +4,8 @@ const Twit = require('twit');
 const Promise = require('bluebird');
 const _ = require('lodash');
 
+const utils = require('./utils');
+
 const MAX_SEARCH_ROUNDS = process.env.MAX_SEARCH_ROUNDS;
 
 /*
@@ -80,6 +82,7 @@ const buildTree = (start_id, tweets) => {
     tree.push({
       id: tweet.id_str,
       parent: parent,
+      user: tweet.user.screen_name,
       text: `[${tweet.user.screen_name}]: ${tweet.text}`,
       icon: tweet.user.profile_image_url,
       url: `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`
@@ -127,8 +130,11 @@ const buildTree = (start_id, tweets) => {
 
   console.log(`Final tree length: ${tree.length}`);
 
+  const participants = utils.sortedCount(tree.map(t => t.user));
+
   return {
-    data: tree
+    tree,
+    participants
   };
 };
 
