@@ -8,6 +8,10 @@ body {
   font-size: 32px;
 }
 
+#title sup {
+  font-size: 14px;
+}
+
 input {
   width: 400px;
 }
