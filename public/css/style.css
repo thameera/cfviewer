@@ -33,3 +33,8 @@ button {
 #participants {
   margin-bottom: 15px;
 }
+
+#participants a {
+  color: cadetblue;
+  text-decoration: none;
+}
