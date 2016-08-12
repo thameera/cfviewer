@@ -67,7 +67,7 @@ $(function() {
           // Get ID of selected tweet
           var id =$(e.target).parent().attr('id').split('_')[0]
           // Find tweet's URL
-          var url = res.data.filter(function(t) {return t.id === id})[0].url;
+          var url = res.tree.filter(function(t) {return t.id === id})[0].url;
           window.open(url,'_blank');
         });
       });
