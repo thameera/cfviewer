@@ -19,6 +19,10 @@ $(function() {
     return vars;
   }
 
+  var setTweetCount = function(tree) {
+    $('#tweetcount').html('<strong>Tweet count:</strong> ' + tree.length);
+  };
+
   var setParticipants = function(participants) {
     var str = participants.map(function(p) {
       return p.name + '(' + p.count + ')'
@@ -42,6 +46,7 @@ $(function() {
 
       $('#loading').hide();
       $('#info').show();
+      setTweetCount(res.tree);
       setParticipants(res.participants);
 
       if (loadedOnce) {
