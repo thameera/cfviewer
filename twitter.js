@@ -146,6 +146,7 @@ const getTweets = (start_url, screennames) => {
   return searchTweets(screennames, `${since_id}`)
     .then(tweets => {
       const uniqTweets = _.uniqBy(tweets, 'id_str');
+      uniqTweets.reverse(); // sort by time ascending
       return buildTree(start_id, uniqTweets);
     });
 };
