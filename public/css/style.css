@@ -46,3 +46,12 @@ button {
 .username a:hover {
   color: #555;
 }
+
+a.text-url {
+  color: #369;
+  text-decoration: none;
+}
+
+a.text-url:hover {
+  color: #246;
+}

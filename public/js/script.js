@@ -31,6 +31,10 @@ $(function() {
     $('#participants').html('<strong>Participants:</strong> ' + str);
   };
 
+  var linkifyText = function(text, entity) {
+    return text.replace(entity.url, '<a target="_blank" class="cfv text-url" href="' + entity.expanded_url + '">' + entity.display_url + '</a>');
+  };
+
   // Get the twitter conversation given a tweet url and optionally usernames
   var getTweets = function(tweetUrl, usernames){
     $('#error').hide();
@@ -51,7 +55,11 @@ $(function() {
 
       // Prepare HTML for node text
       var tree = res.tree.map(function(node) {
-        node.text = ' <em class="username"><a href="' + node.url + '">' + node.user + '</a></em>: ' + node.text;
+        var text = node.text;
+        node.url_entities.forEach(function(entity) {
+          text = linkifyText(text, entity);
+        });
+        node.text = ' <em class="username"><a class="cfv" href="' + node.url + '">' + node.user + '</a></em>: ' + text;
         return node;
       });
 
@@ -68,7 +76,7 @@ $(function() {
 
       // Bind clicks on tree nodes
       $('#tree').bind('ready.jstree open_node.jstree', function(e, data) {
-        $('.username a').unbind('click').click(function(e) {
+        $('a.cfv').unbind('click').click(function(e) {
           // Find tweet's URL
           var url = $(e.target)[0].href;
           window.open(url, '_blank');

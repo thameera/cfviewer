@@ -43,7 +43,7 @@ const searchTweets = (screennames, since_id) => {
   let round = 0;
 
   const search = max_id => {
-    const opts = { q: query, count: 100, include_entities: false };
+    const opts = { q: query, count: 100 };
     if (max_id) opts.max_id = max_id;
     if (since_id) opts.since_id = since_id;
     return callAPI(opts);
@@ -73,19 +73,30 @@ const searchTweets = (screennames, since_id) => {
   return doARound();
 };
 
+const getStrippedEntity = entity => {
+  return {
+    url: entity.url,
+    display_url: entity.display_url,
+    expanded_url: entity.expanded_url
+  };
+};
+
 const buildTree = (start_id, tweets) => {
   console.log(`Building tree from ${tweets.length} tweets...`);
 
   const tree = [];
 
   const add = (tweet, parent) => {
+    const entities = _.compact(tweet.entities.urls.concat(tweet.entities.media));
+
     tree.push({
       id: tweet.id_str,
       parent: parent,
       user: tweet.user.screen_name,
       text: tweet.text,
       icon: tweet.user.profile_image_url,
-      url: `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`
+      url: `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`,
+      url_entities: entities.map(getStrippedEntity)
     });
   };
 
