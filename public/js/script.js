@@ -31,8 +31,17 @@ $(function() {
     $('#participants').html('<strong>Participants:</strong> ' + str);
   };
 
-  var linkifyText = function(text, entity) {
-    return text.replace(entity.url, '<a target="_blank" class="cfv text-url" href="' + entity.expanded_url + '">' + entity.display_url + '</a>');
+  var linkify = function(text, entities) {
+    // Usernames
+    text = text.replace(/(^|\s|“|\.|")@(\w+)/g, '$1<a target="_blank" class="cfv text-url" href="https://twitter.com/$2">@$2</a>');
+    // Hashtags
+    text = text.replace(/(^|\s)#([^\u0000-\u007F]+|\w+)/g, '$1<a target="_blank" class="cfv text-url" href="https://twitter.com/hashtag/$2">#$2</a>');
+    // URLs
+    entities.forEach(function(entity) {
+      text = text.replace(entity.url, '<a target="_blank" class="cfv text-url" href="' + entity.expanded_url + '">' + entity.display_url + '</a>');
+    });
+
+    return text;
   };
 
   // Get the twitter conversation given a tweet url and optionally usernames
@@ -55,10 +64,7 @@ $(function() {
 
       // Prepare HTML for node text
       var tree = res.tree.map(function(node) {
-        var text = node.text;
-        node.url_entities.forEach(function(entity) {
-          text = linkifyText(text, entity);
-        });
+        var text = linkify(node.text, node.url_entities);
         node.text = ' <em class="username"><a class="cfv" href="' + node.url + '">' + node.user + '</a></em>: ' + text;
         return node;
       });
