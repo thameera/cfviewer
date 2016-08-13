@@ -147,7 +147,7 @@ $(function() {
       $('#toggleCollapse').prop('title', 'Expand tree');
   }
 
-  $('#view').click(function() {
+  $('#search').click(function() {
     updateTree();
     initTreeState();
   });
@@ -181,10 +181,5 @@ $(function() {
   // Select text on click
   $('#tweet_url, #usernames').click(function() {
     this.select();
-  });
-
-  $('#clear').click(function() {
-    $('#tweet_url').val('');
-    $('#usernames').val('');
   });
 });
