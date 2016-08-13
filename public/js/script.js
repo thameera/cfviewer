@@ -119,6 +119,8 @@ $(function() {
     localStorage.setItem('tweetUrl', tweetUrl);
     localStorage.setItem('usernames', usernames);
 
+    if (!tweetUrl || !tweetUrl.trim()) return;
+
     var params = { 'tweeturl': tweetUrl, 'users': usernames}
     var str = jQuery.param( params );
     window.history.pushState('', '', '?' + str);
