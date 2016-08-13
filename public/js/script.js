@@ -142,14 +142,14 @@ $(function() {
   }
 
   var initTreeState = function() {
-      treeCollapsed = false;
+      treeCollapsed = true;
       $('#toggleCollapse').html("+");
       $('#toggleCollapse').prop('title', 'Expand tree');
-  }
+  };
 
   $('#search').click(function() {
-    updateTree();
     initTreeState();
+    updateTree();
   });
 
   var toggleCollapse = function(){
@@ -173,8 +173,8 @@ $(function() {
   // Bind Enter key press on text boxes
   $('#tweet_url, #usernames').keypress(function(e) {
     if (e.keyCode === 13) {
-      updateTree();
       initTreeState();
+      updateTree();
     }
   });
 
