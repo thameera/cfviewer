@@ -139,8 +139,15 @@ $(function() {
     updateTree();
   }
 
+  var initTreeState(){
+      treeCollapsed = false;
+      $('#toggleCollapse').html("+");
+      $('#toggleCollapse').prop('title', 'Expand tree');
+  }
+
   $('#view').click(function() {
     updateTree();
+    initTreeState();
   });
 
   var toggleCollapse = function(){
@@ -163,7 +170,10 @@ $(function() {
 
   // Bind Enter key press on text boxes
   $('#tweet_url, #usernames').keypress(function(e) {
-    if (e.keyCode === 13) updateTree();
+    if (e.keyCode === 13) {
+      updateTree();
+      initTreeState();
+    }
   });
 
   // Select text on click
