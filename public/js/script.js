@@ -31,14 +31,17 @@ $(function() {
     $('#participants').html('<strong>Participants:</strong> ' + str);
   };
 
-  var linkify = function(text, entities) {
+  var linkify = function(text, url_entities, media_entities) {
     // Usernames
     text = text.replace(/(^|\s|“|\.|")@(\w+)/g, '$1<a target="_blank" class="cfv text-url" href="https://twitter.com/$2">@$2</a>');
     // Hashtags
     text = text.replace(/(^|\s)#([^\u0000-\u007F]+|\w+)/g, '$1<a target="_blank" class="cfv text-url" href="https://twitter.com/hashtag/$2">#$2</a>');
     // URLs
-    entities.forEach(function(entity) {
+    url_entities.forEach(function(entity) {
       text = text.replace(entity.url, '<a target="_blank" class="cfv text-url" href="' + entity.expanded_url + '">' + entity.display_url + '</a>');
+    });
+    media_entities.forEach(function(entity) {
+      text = text.replace(entity.url, '<a class="cfv text-url media" media-url="' + entity.media_url + '">' + entity.display_url + '</a>');
     });
 
     return text;
@@ -64,7 +67,7 @@ $(function() {
 
       // Prepare HTML for node text
       var tree = res.tree.map(function(node) {
-        var text = linkify(node.text, node.url_entities);
+        var text = linkify(node.text, node.url_entities, node.media_entities);
         node.text = ' <em class="username"><a class="cfv" href="' + node.url + '">' + node.user + '</a></em>: ' + text;
         return node;
       });
@@ -80,17 +83,31 @@ $(function() {
         loadedOnce = true;
       }
 
-      // Bind clicks on tree nodes
-      $('#tree').bind('ready.jstree open_node.jstree', function(e, data) {
-        $('a.cfv').unbind('click').click(function(e) {
-          // Find tweet's URL
-          var url = $(e.target)[0].href;
-          window.open(url, '_blank');
-        });
-      });
-
     });
   }
+
+  // Bind clicks on tree nodes
+  $('#tree').bind('ready.jstree open_node.jstree redraw.jstree', function(e, data) {
+
+    // Open external links
+    $('a.cfv').unbind('click').click(function(e) {
+      // Find tweet's URL
+      var url = $(e.target)[0].href;
+      window.open(url, '_blank');
+    });
+
+    // Show image
+    $('a.media').unbind('click').click(function(e) {
+      var url = $(e.target).attr('media-url');
+      $('<img />', {
+        src: url,
+        style: 'max-width: 500px; max-height: 500px'
+      }).one('load', function() {
+        $.colorbox({html: $(this)});
+      });
+    });
+
+  });
 
   // Pre-populate values from localStorage
   $('#tweet_url').val(localStorage.getItem('tweetUrl') || '');

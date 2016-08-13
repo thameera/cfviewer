@@ -73,12 +73,26 @@ const searchTweets = (screennames, since_id) => {
   return doARound();
 };
 
-const getStrippedEntity = entity => {
-  return {
-    url: entity.url,
-    display_url: entity.display_url,
-    expanded_url: entity.expanded_url
-  };
+const getUrlEntities = tweet => {
+  if (!tweet.entities.urls) return [];
+  return tweet.entities.urls.map(e => {
+    return {
+      url: e.url,
+      display_url: e.display_url,
+      expanded_url: e.expanded_url
+    };
+  });
+};
+
+const getMediaEntities = tweet => {
+  if (!tweet.entities.media) return [];
+  return tweet.entities.media.map(e => {
+    return {
+      url: e.url,
+      display_url: e.display_url,
+      media_url: e.media_url
+    };
+  });
 };
 
 const buildTree = (start_id, tweets) => {
@@ -87,8 +101,6 @@ const buildTree = (start_id, tweets) => {
   const tree = [];
 
   const add = (tweet, parent) => {
-    const entities = _.compact(tweet.entities.urls.concat(tweet.entities.media));
-
     tree.push({
       id: tweet.id_str,
       parent: parent,
@@ -96,7 +108,8 @@ const buildTree = (start_id, tweets) => {
       text: tweet.text,
       icon: tweet.user.profile_image_url,
       url: `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`,
-      url_entities: entities.map(getStrippedEntity)
+      url_entities: getUrlEntities(tweet),
+      media_entities: getMediaEntities(tweet)
     });
   };
 
