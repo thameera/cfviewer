@@ -56,3 +56,13 @@ a.text-url {
 a.text-url:hover {
   color: #246;
 }
+
+/* Round border for dp */
+.jstree-icon:empty {
+  border-radius: 5px;
+}
+
+/* Bottom margin of tweet nodes */
+.jstree-anchor {
+  margin-bottom: 2px;
+}
