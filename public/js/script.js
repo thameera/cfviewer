@@ -46,29 +46,32 @@ $(function() {
       }
 
       $('#loading').hide();
-      $('#info').show();
       setTweetCount(res.tree);
       setParticipants(res.participants);
 
+      // Prepare HTML for node text
+      var tree = res.tree.map(function(node) {
+        node.text = ' <em class="username"><a href="' + node.url + '">' + node.user + '</a></em>: ' + node.text;
+        return node;
+      });
+
       if (loadedOnce) {
-        $('#tree').jstree(true).settings.core.data = res.tree;
+        $('#tree').jstree(true).settings.core.data = tree;
         $('#tree').jstree(true).refresh();
       } else {
         $('#tree').jstree({ 'core' : {
           check_callback: true,
-          data: res.tree
+          data: tree
         }});
         loadedOnce = true;
       }
 
-      // Bind click on profile pic
+      // Bind clicks on tree nodes
       $('#tree').bind('ready.jstree open_node.jstree', function(e, data) {
-        $('i.jstree-themeicon').unbind('click').click(function(e) {
-          // Get ID of selected tweet
-          var id =$(e.target).parent().attr('id').split('_')[0]
+        $('.username a').unbind('click').click(function(e) {
           // Find tweet's URL
-          var url = res.tree.filter(function(t) {return t.id === id})[0].url;
-          window.open(url,'_blank');
+          var url = $(e.target)[0].href;
+          window.open(url, '_blank');
         });
       });
 

@@ -25,16 +25,21 @@ button {
   display: none;
 }
 
-#info {
-  margin-bottom: 15px;
-  display: none;
-}
-
 #participants {
   margin-bottom: 15px;
 }
 
 #participants a {
   color: cadetblue;
+  text-decoration: none;
+}
+
+.username a {
+  color: #888;
+  text-decoration: none;
+}
+
+.username a:hover {
+  color: #777;
   text-decoration: none;
 }
