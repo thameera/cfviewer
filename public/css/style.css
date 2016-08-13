@@ -30,8 +30,12 @@ button {
 }
 
 #participants a {
-  color: cadetblue;
+  color: #666;
   text-decoration: none;
+}
+
+#participants a:hover {
+  color: #333;
 }
 
 .username a {
@@ -40,6 +44,5 @@ button {
 }
 
 .username a:hover {
-  color: #777;
-  text-decoration: none;
+  color: #555;
 }
