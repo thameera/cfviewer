@@ -139,7 +139,7 @@ $(function() {
     updateTree();
   }
 
-  var initTreeState(){
+  var initTreeState = function() {
       treeCollapsed = false;
       $('#toggleCollapse').html("+");
       $('#toggleCollapse').prop('title', 'Expand tree');
