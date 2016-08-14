@@ -26,7 +26,7 @@ $(function() {
   var setParticipants = function(participants) {
     var str = participants.map(function(p) {
       var link = '<a href ="https://twitter.com/' + p.name + '" target="_blank">' + p.name + '</a>';
-      return link + '(' + p.count + ')'
+      return link + '<sup>' + p.count + '</sup>'
     }).join(', ');
     $('#participants').html('<strong>Participants:</strong> ' + str);
   };
