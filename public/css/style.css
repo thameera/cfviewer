@@ -12,6 +12,7 @@ body {
 #title {
   font-family: "Courier New", Courier, monospace;
   font-size: 32px;
+  margin-bottom: 20px;
 }
 
 #title sup {
@@ -19,12 +20,15 @@ body {
 }
 
 input {
-  width: 400px;
+  width: 500px;
+  font-size: 14px;
+  margin: 6px;
 }
 
 button {
   margin-top: 10px;
   font-size: 16px;
+  margin-bottom: 6px;
 }
 
 #loading, #error {
@@ -70,4 +74,12 @@ a.text-url:hover {
 /* Bottom margin of tweet nodes */
 .jstree-anchor {
   margin-bottom: 2px;
+}
+
+.tooltipster-sidetip .tooltipster-box {
+  border-color: #565656;
+}
+
+.tooltipster-sidetip.tooltipster-right .tooltipster-arrow-border {
+  border-right-color: #565656;
 }

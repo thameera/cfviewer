@@ -5,6 +5,7 @@
   <title>CFViewer</title>
 
   <link rel="stylesheet" href="css/jstree.min.css">
+  <link rel="stylesheet" href="css/tooltipster.bundle.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,16 +14,12 @@
       CFViewer<sup>beta</sup>
     </div>
 
-    <table border="0" align="center">
-      <tr>
-        <td>Originating tweet URL:</td>
-        <td><input type="text" id="tweet_url" placeholder="eg: https://twitter.com/bartongellman/status/762051877995446272" /></td>
-      </tr>
-      <tr>
-        <td>Usernames (space-separated):</td>
-        <td><input type="text" id="usernames" placeholder="eg: jack horse_js"/></td>
-      </tr>
-    </table>
+    <div>
+      <input type="text" id="tweet_url" placeholder="eg: https://twitter.com/bartongellman/status/762051877995446272" class="tooltip" title="Root tweet's URL" />
+    </div>
+    <div>
+      <input type="text" id="usernames" placeholder="eg: jack horse_js" class="tooltip" title="Usernames (Optional. Space-separated.)" />
+    </div>
 
     <div>
       <button id="search"/>Search</button>
@@ -41,6 +38,7 @@
   <script src="js/jquery-3.1.0.min.js"></script>
   <script src="js/jstree.min.js"></script>
   <script src="js/jquery.colorbox-min.js"></script>
+  <script src="js/tooltipster.bundle.min.js"></script>
   <script src="js/script.js"></script>
 </body>
 </html>

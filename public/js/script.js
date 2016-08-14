@@ -182,4 +182,9 @@ $(function() {
   $('#tweet_url, #usernames').click(function() {
     this.select();
   });
+
+  $('.tooltip').tooltipster({
+    side: 'right',
+    delay: [100, 100]
+  });
 });
