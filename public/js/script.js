@@ -60,6 +60,40 @@ $(function() {
     return date + ' ' + time;
   };
 
+  var getTweetSuccessCb = function(res) {
+    if (typeof res === 'string') {
+      return showError();
+    }
+
+    $('#loading').hide();
+    setTweetCount(res.tree);
+    setParticipants(res.participants);
+
+    // Prepare HTML for node text
+    var tree = res.tree.map(function(node) {
+      var text = linkify(node.text, node.url_entities, node.media_entities);
+      var timestamp = getLKTimestamp(node.epoch);
+      node.text = ' <em class="username"><a class="cfv" href="' + node.url + '" title="' + timestamp + '">' + node.user + '</a></em>: ' + text;
+      return node;
+    });
+
+    if (loadedOnce) {
+      $('#tree').jstree(true).settings.core.data = tree;
+      $('#tree').jstree(true).refresh();
+    } else {
+      $('#tree').jstree({ 'core' : {
+        check_callback: true,
+        data: tree
+      }});
+      loadedOnce = true;
+    }
+  };
+
+  var showError = function() {
+    $('#error').show();
+    $('#loading').hide();
+  };
+
   // Get the twitter conversation given a tweet url and optionally usernames
   var getTweets = function(tweetUrl, usernames){
     $('#error').hide();
@@ -67,38 +101,10 @@ $(function() {
     $.post('/api/get-tweets', {
       tweetUrl: decodeURIComponent(tweetUrl),
       usernames: usernames
-    }, function(res) {
-      if (typeof res === 'string') {
-        $('#error').show();
-        $('#loading').hide();
-        return;
-      }
-
-      $('#loading').hide();
-      setTweetCount(res.tree);
-      setParticipants(res.participants);
-
-      // Prepare HTML for node text
-      var tree = res.tree.map(function(node) {
-        var text = linkify(node.text, node.url_entities, node.media_entities);
-        var timestamp = getLKTimestamp(node.epoch);
-        node.text = ' <em class="username"><a class="cfv" href="' + node.url + '" title="' + timestamp + '">' + node.user + '</a></em>: ' + text;
-        return node;
-      });
-
-      if (loadedOnce) {
-        $('#tree').jstree(true).settings.core.data = tree;
-        $('#tree').jstree(true).refresh();
-      } else {
-        $('#tree').jstree({ 'core' : {
-          check_callback: true,
-          data: tree
-        }});
-        loadedOnce = true;
-      }
-
-    });
-  }
+    })
+      .done(getTweetSuccessCb)
+      .fail(showError);
+  };
 
   // Bind clicks on tree nodes
   $('#tree').bind('ready.jstree open_node.jstree redraw.jstree', function(e, data) {
