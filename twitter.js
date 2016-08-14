@@ -107,6 +107,7 @@ const buildTree = (start_id, tweets) => {
       user: tweet.user.screen_name,
       text: tweet.text,
       icon: tweet.user.profile_image_url,
+      epoch: utils.getEpoch(tweet.created_at),
       url: `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`,
       url_entities: getUrlEntities(tweet),
       media_entities: getMediaEntities(tweet)

@@ -47,6 +47,19 @@ $(function() {
     return text;
   };
 
+  // Left-pad to two digits
+  var pad = function(n) {
+    return ('0' + n).substr(-2);
+  };
+
+  var getLKTimestamp = function(epoch) {
+    var t = new Date(epoch);
+    var date = t.getFullYear() + '-' + pad(t.getMonth() + 1) + '-' + pad(t.getDate());
+    var h = t.getHours();
+    var time = (h > 12 ? h%12 : h) + ':' + pad(t.getMinutes()) + (h > 12 ? 'pm' : 'am');
+    return date + ' ' + time;
+  };
+
   // Get the twitter conversation given a tweet url and optionally usernames
   var getTweets = function(tweetUrl, usernames){
     $('#error').hide();
@@ -68,7 +81,8 @@ $(function() {
       // Prepare HTML for node text
       var tree = res.tree.map(function(node) {
         var text = linkify(node.text, node.url_entities, node.media_entities);
-        node.text = ' <em class="username"><a class="cfv" href="' + node.url + '">' + node.user + '</a></em>: ' + text;
+        var timestamp = getLKTimestamp(node.epoch);
+        node.text = ' <em class="username"><a class="cfv" href="' + node.url + '" title="' + timestamp + '">' + node.user + '</a></em>: ' + text;
         return node;
       });
 
@@ -107,6 +121,12 @@ $(function() {
       });
     });
 
+    // Time tooltip
+    $('em a').tooltipster({
+      side: 'bottom',
+      delay: [100, 100],
+      debug: false
+    });
   });
 
   // Pre-populate values from localStorage
@@ -185,6 +205,7 @@ $(function() {
 
   $('.tooltip').tooltipster({
     side: 'right',
-    delay: [100, 100]
+    delay: [100, 100],
+    debug: false
   });
 });

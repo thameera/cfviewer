@@ -96,3 +96,11 @@ a.text-url:hover {
 .tooltipster-sidetip.tooltipster-right .tooltipster-arrow-border {
   border-right-color: #565656;
 }
+
+.tooltipster-sidetip.tooltipster-bottom .tooltipster-arrow-border {
+  border-bottom-color: #565656;
+}
+
+.tooltipster-sidetip .tooltipster-content {
+  font-size: 14px;
+}

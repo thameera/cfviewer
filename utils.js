@@ -25,6 +25,12 @@ const sortedCount = arr => {
   return _.orderBy(counts, ['count', 'name'], ['desc', 'asc']);
 };
 
+/*
+ * Returns unix time from twitter timestamp
+ */
+const getEpoch = timestamp => (new Date(timestamp)).getTime();
+
 module.exports = {
-  sortedCount
+  sortedCount,
+  getEpoch
 }
