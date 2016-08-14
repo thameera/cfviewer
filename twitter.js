@@ -6,7 +6,7 @@ const _ = require('lodash');
 
 const utils = require('./utils');
 
-const MAX_SEARCH_ROUNDS = process.env.MAX_SEARCH_ROUNDS;
+const MAX_SEARCH_ROUNDS = Number(process.env.MAX_SEARCH_ROUNDS);
 
 /*
  * Returns a function that would call the Twitter API with
