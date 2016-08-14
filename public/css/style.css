@@ -38,10 +38,24 @@ input {
 button {
   margin-top: 10px;
   font-size: 16px;
+  border: none;
+  background-color: #ddd;
+  border-radius: 2px;
+  color: #757575;
+  outline: none;
 }
 
 #search {
   margin-bottom: 6px;
+  height: 32px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+#search:hover {
+  box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+  border: 1px solid #c6c6c6;
+  color: #222;
 }
 
 #loading, #error {
