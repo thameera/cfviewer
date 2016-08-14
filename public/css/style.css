@@ -62,6 +62,10 @@ button {
   display: none;
 }
 
+#content {
+  visibility: hidden;
+}
+
 #participants {
   margin-bottom: 15px;
 }

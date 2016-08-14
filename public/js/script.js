@@ -66,6 +66,7 @@ $(function() {
     }
 
     $('#loading').hide();
+    $('#content').css({visibility: 'visible'});
     setTweetCount(res.tree);
     setParticipants(res.participants);
 
