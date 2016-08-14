@@ -19,7 +19,17 @@ body {
   font-size: 14px;
 }
 
+.input-container {
+  margin: 4px auto;
+  width: 510px;
+  border: 1px solid #d9d9d9;
+  padding: 1px;
+}
+
 input {
+  box-sizing: border-box;
+  border: none;
+  outline: none;
   width: 500px;
   font-size: 14px;
   margin: 6px;
