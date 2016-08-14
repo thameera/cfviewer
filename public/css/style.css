@@ -5,6 +5,10 @@ body {
   font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
 }
 
+#header {
+  text-align: center;
+}
+
 #title {
   font-family: "Courier New", Courier, monospace;
   font-size: 32px;
