@@ -2,10 +2,7 @@
 
 const Twit = require('twit');
 const Promise = require('bluebird');
-const _ = require('lodash');
 const logger = require('winston');
-
-const utils = require('./utils');
 
 const MAX_SEARCH_ROUNDS = Number(process.env.MAX_SEARCH_ROUNDS);
 
@@ -36,9 +33,14 @@ const callAPI = (() => {
   };
 })();
 
-const searchTweets = (screennames, since_id) => {
+const searchTweets = (screennames, root_id) => {
   const query = screennames.join(' OR ');
   logger.debug(`Searching for: ${query}`);
+
+  // Using root_id as since_id leaves out the root tweet from search result
+  // Need to deduct 1 to have it included. Since we are operating on
+  // numbers > MAX_SAFE_INTEGER, we deduct 1000 to  be safe
+  const since_id = Number(root_id)-1000;
 
   let tweets = [];
   let round = 0;
@@ -52,6 +54,7 @@ const searchTweets = (screennames, since_id) => {
 
   const doARound = max_id => {
     round++;
+    console.log('Round No: ', round);
     return search(max_id)
       .then(result => {
         if (!result.data || !result.data.statuses) {
@@ -74,115 +77,6 @@ const searchTweets = (screennames, since_id) => {
   return doARound();
 };
 
-const getUrlEntities = tweet => {
-  if (!tweet.entities.urls) return [];
-  return tweet.entities.urls.map(e => {
-    return {
-      url: e.url,
-      display_url: e.display_url,
-      expanded_url: e.expanded_url
-    };
-  });
-};
-
-const getMediaEntities = tweet => {
-  if (!tweet.entities.media) return [];
-  return tweet.entities.media.map(e => {
-    return {
-      url: e.url,
-      display_url: e.display_url,
-      media_url: e.media_url
-    };
-  });
-};
-
-const buildTree = (start_id, tweets) => {
-  logger.debug(`Building tree from ${tweets.length} tweets...`);
-
-  const tree = [];
-
-  const add = (tweet, parent) => {
-    tree.push({
-      id: tweet.id_str,
-      parent: parent,
-      user: tweet.user.screen_name,
-      text: tweet.text,
-      icon: tweet.user.profile_image_url,
-      epoch: utils.getEpoch(tweet.created_at),
-      url: `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`,
-      url_entities: getUrlEntities(tweet),
-      media_entities: getMediaEntities(tweet)
-    });
-  };
-
-  // Find all tweets which quote given tweet id
-  const findQuoted = id => _.filter(tweets, { quoted_status_id_str: id});
-
-  // Find tweets that quote current tweet and add to the tree
-  const iterateForQuotingTweets = (id) => {
-    findQuoted(id).forEach(t => {
-      add(t, id);
-      iterateForReplies(t.id_str);
-    });
-  };
-
-  const iterateForReplies = id => {
-    // Get all replies to the tweet with given ID
-    const replies = _.remove(tweets, { in_reply_to_status_id_str: id });
-
-    if (!replies || !replies.length) return;
-
-    replies.forEach(r => {
-      add(r, id);
-      iterateForReplies(r.id_str);
-      iterateForQuotingTweets(r.id_str);
-    });
-  };
-
-  const iterateRoot = root_id => {
-    logger.debug(`Iterating for root tweet: ${root_id}`);
-    // Find root tweet
-    const root = _.find(tweets, { id_str: root_id });
-
-    if (!root) return 'Root tweet not found';
-
-    add(root, '#');
-
-    iterateForReplies(root.id_str);
-    iterateForQuotingTweets(root.id_str);
-  };
-
-  iterateRoot(start_id);
-
-  logger.debug(`Final tree length: ${tree.length}`);
-
-  const participants = utils.sortedCount(tree.map(t => t.user));
-
-  return {
-    tree,
-    participants
-  };
-};
-
-const getTweets = (start_url, screennames) => {
-  const start_id = start_url.substring(start_url.lastIndexOf('/')+1);
-
-  // Make sure originating tweep is included in screennames array
-  const username = start_url.substring(20, start_url.indexOf('/status'))
-  if (!screennames.includes(username)) screennames.push(username);
-
-  // Using since_id leaves out the root tweet from search result
-  // Need to deduct 1 to have it included. Since we are operating on
-  // numbers > MAX_SAFE_INTEGER we deduct 1000 to  be safe
-  const since_id = Number(start_id)-1000;
-  return searchTweets(screennames, `${since_id}`)
-    .then(tweets => {
-      const uniqTweets = _.uniqBy(tweets, 'id_str');
-      uniqTweets.reverse(); // sort by time ascending
-      return buildTree(start_id, uniqTweets);
-    });
-};
-
 module.exports = {
-  getTweets
-};
+  searchTweets
+}
