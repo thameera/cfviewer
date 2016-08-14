@@ -15,6 +15,16 @@ body {
   margin-bottom: 20px;
 }
 
+#title a {
+  color: #000;
+  text-decoration: none;
+}
+
+#title a:hover {
+  color: #555;
+  text-decoration: none;
+}
+
 #title sup {
   font-size: 14px;
 }
