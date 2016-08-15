@@ -3,6 +3,8 @@
 const Promise = require('bluebird');
 const fs  = Promise.promisifyAll(require('fs'));
 
+const logger = require('winston');
+
 class FileArchive{
   constructor (tweet_id, username, dir=null) {
     this.tweet_id = tweet_id;
@@ -23,7 +25,7 @@ class FileArchive{
   }
 
   read(type){
-    return pickDataFile(this.tweet_id, type).then((data_file)=> {
+    return pickDataFile(this.tweet_id, type, this.dir).then((data_file)=> {
       if (!data_file) return {};
       console.log(`datafile: ${data_file}`);
       return fs.readFileAsync(data_file, 'utf8')
@@ -32,13 +34,10 @@ class FileArchive{
   }
 };
 
-const pickDataFile = (tweet_id, type) => {
+const pickDataFile = (tweet_id, type, dir) => {
   //read all data files and pic the most recent for name / tweet_id
-  return new Promise((resolve, reject) => {
-    fs.readdirAsync(process.env.DATA_DIR)
-    .then((files, err) => {
-      if (err) reject(err);
-
+  return fs.readdirAsync(dir)
+    .then((files) => {
       // determine the newest file for given tweet & type
       let maxTs = 0;
       let latestFile;
@@ -49,13 +48,15 @@ const pickDataFile = (tweet_id, type) => {
         }
       });
 
-      if (!latestFile) return resolve();
+      if (!latestFile) return null;
 
       latestFile = process.env.DATA_DIR + '/' + latestFile;
 
-      resolve(latestFile);
+      return latestFile;
+    }).catch((e) => {
+      logger.error(e);
+      return null;
     });
-  });
 }
 
 module.exports = {
