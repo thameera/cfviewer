@@ -18,8 +18,7 @@ class FileArchive{
   }
 
   write(content, type) {
-    const ts = new Date/1e3|0;
-    const path = `${this.dir}/${type}_${this.username}_${this.tweet_id}_${ts}.json`
+    const path = `${this.dir}/${type}_${this.username}_${this.tweet_id}.json`
 
     fs.writeFile(path, JSON.stringify(content), 'utf-8');
   }
@@ -38,21 +37,14 @@ const pickDataFile = (tweet_id, type, dir) => {
   //read all data files and pic the most recent for name / tweet_id
   return fs.readdirAsync(dir)
     .then((files) => {
-      // determine the newest file for given tweet & type
-      let maxTs = 0;
-      let latestFile;
+      // determine the file for given tweet & type
+      let archive_file;
       files.forEach(file => {
-        if (file.indexOf(tweet_id) > -1 && file.indexOf(type) > -1){
-          let fileTs = file.substring(file.indexOf(tweet_id) + tweet_id.length +1, file.indexOf('.json'));
-          if (Math.max(maxTs, fileTs) == fileTs) latestFile = file;
+        if (file.indexOf(tweet_id) > -1 && file.indexOf(type) > -1) {
+          archive_file = file;
         }
       });
-
-      if (!latestFile) return null;
-
-      latestFile = process.env.DATA_DIR + '/' + latestFile;
-
-      return latestFile;
+      return dir + '/' + archive_file;
     }).catch((e) => {
       logger.error(e);
       return null;
