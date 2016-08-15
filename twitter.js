@@ -3,6 +3,7 @@
 const Twit = require('twit');
 const Promise = require('bluebird');
 const _ = require('lodash');
+const logger = require('winston');
 
 const utils = require('./utils');
 
@@ -27,7 +28,7 @@ const callAPI = (() => {
 
   let next = 0;
   return (opts) => {
-    console.log( next);
+    logger.debug(next);
     const prom = apps[next].get('search/tweets', opts);
     next++;
     if (next === numOfApps) next = 0;
@@ -37,7 +38,7 @@ const callAPI = (() => {
 
 const searchTweets = (screennames, since_id) => {
   const query = screennames.join(' OR ');
-  console.log(`Searching for: ${query}`);
+  logger.debug(`Searching for: ${query}`);
 
   let tweets = [];
   let round = 0;
@@ -96,7 +97,7 @@ const getMediaEntities = tweet => {
 };
 
 const buildTree = (start_id, tweets) => {
-  console.log(`Building tree from ${tweets.length} tweets...`);
+  logger.debug(`Building tree from ${tweets.length} tweets...`);
 
   const tree = [];
 
@@ -139,7 +140,7 @@ const buildTree = (start_id, tweets) => {
   };
 
   const iterateRoot = root_id => {
-    console.log(`Iterating for root tweet: ${root_id}`);
+    logger.debug(`Iterating for root tweet: ${root_id}`);
     // Find root tweet
     const root = _.find(tweets, { id_str: root_id });
 
@@ -153,7 +154,7 @@ const buildTree = (start_id, tweets) => {
 
   iterateRoot(start_id);
 
-  console.log(`Final tree length: ${tree.length}`);
+  logger.debug(`Final tree length: ${tree.length}`);
 
   const participants = utils.sortedCount(tree.map(t => t.user));
 

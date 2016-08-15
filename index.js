@@ -7,6 +7,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cache = require('memory-cache');
 
+const logger = require('./logger');
 const twitter = require('./twitter');
 
 const getCacheKey = (tweetUrl, usernames) => `${tweetUrl}${usernames.sort().join('')}`;
@@ -30,11 +31,11 @@ app.post('/api/get-tweets', (req, res) => {
   const cacheKey = getCacheKey(tweetUrl, usernames);
   const cached = cache.get(cacheKey);
   if (cached) {
-    console.log(`Cache hit: ${cacheKey}`);
+    logger.debug(`Cache hit: ${cacheKey}`);
     return res.json(cached);
   }
 
-  console.log(`Tweet URL: ${tweetUrl}\nUsernames: ${usernames}`);
+  logger.info(`Tweet URL: ${tweetUrl}\nUsernames: ${usernames}`);
 
   twitter.getTweets(tweetUrl, usernames)
     .then(tree => {
@@ -44,5 +45,5 @@ app.post('/api/get-tweets', (req, res) => {
 });
 
 app.listen(process.env.APP_PORT, () => {
-  console.log('Listening on port ' + process.env.APP_PORT + '!');
+  logger.info('Listening on port ' + process.env.APP_PORT + '!');
 });
