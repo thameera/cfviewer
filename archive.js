@@ -24,7 +24,7 @@ class FileArchive{
 
   read(type){
     return pickDataFile(this.tweet_id, type).then((data_file)=> {
-      if (!data_file) return [];
+      if (!data_file) return {};
       console.log(`datafile: ${data_file}`);
       return fs.readFileAsync(data_file, 'utf8')
         .then(JSON.parse);

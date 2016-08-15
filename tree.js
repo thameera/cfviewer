@@ -2,6 +2,7 @@
 
 const _ = require('lodash');
 const twitter = require('./twitter');
+const archive = require('./archive');
 const utils = require('./utils');
 
 const getUrlEntities = tweet => {
@@ -26,7 +27,7 @@ const getMediaEntities = tweet => {
   });
 };
 
-const buildTree = (start_id, tweets) => {
+const buildTree = (root_id, tweets) => {
   console.log(`Building tree from ${tweets.length} tweets...`);
 
   const tree = [];
@@ -41,7 +42,8 @@ const buildTree = (start_id, tweets) => {
       epoch: utils.getEpoch(tweet.created_at),
       url: `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`,
       url_entities: getUrlEntities(tweet),
-      media_entities: getMediaEntities(tweet)
+      media_entities: getMediaEntities(tweet),
+      raw_tweet: tweet
     });
   };
 
@@ -74,7 +76,7 @@ const buildTree = (start_id, tweets) => {
     // Find root tweet
     const root = _.find(tweets, { id_str: root_id });
 
-    if (!root) return 'Root tweet not found';
+    if (!root) return {is_error: true, message: "Root tweet not found"};
 
     add(root, '#');
 
@@ -82,7 +84,7 @@ const buildTree = (start_id, tweets) => {
     iterateForQuotingTweets(root.id_str);
   };
 
-  iterateRoot(start_id);
+  iterateRoot(root_id);
 
   console.log(`Final tree length: ${tree.length}`);
 
@@ -95,18 +97,50 @@ const buildTree = (start_id, tweets) => {
 };
 
 const getTweets = (start_url, screennames) => {
-  const start_id = start_url.substring(start_url.lastIndexOf('/')+1);
+  let root_id = start_url.substring(start_url.lastIndexOf('/')+1);
 
   // Make sure originating tweep is included in screennames array
   const username = start_url.substring(20, start_url.indexOf('/status'))
   if (!screennames.includes(username)) screennames.push(username);
 
-  return twitter.searchTweets(screennames, start_id)
-    .then(tweets => {
-      const uniqTweets = _.uniqBy(tweets, 'id_str');
-      uniqTweets.reverse(); // sort by time ascending
-      return buildTree(start_id, uniqTweets);
-    });
+  const ar = new archive.FileArchive(root_id, username);
+  let start_id;
+  return ar.read('tree').then(convoCache => {
+    let cachedTree = [];
+    let cachedTweets = [];
+    if (Object.keys(convoCache).length > 0) {
+      cachedTree = convoCache['tree'];
+      cachedTweets = cachedTree.map(t => t.raw_tweet)
+      console.log('Initial tree size: ', cachedTree.length);
+      start_id = Math.max.apply(null, cachedTree.map(t => t.id));
+    } else {
+      start_id = root_id;
+    }
+
+    return twitter.searchTweets(screennames, start_id)
+      .then(tweets => {
+        if (tweets.length > 1){
+          console.log('New tweets: ', tweets.length);
+          tweets = tweets.concat(cachedTweets);
+          const uniqTweets = _.uniqBy(tweets, 'id_str');
+          uniqTweets.reverse(); // sort by time ascending
+          const tree = buildTree(root_id, uniqTweets);
+          if (tree['tree'].length === 0 || tree['is_error'] === true) {
+            return {
+              error: true,
+              message: "Oops! I couldn't find that conversation :("
+            };
+          }
+          ar.write(tree, 'tree');
+          return tree;
+        } else {
+          return [
+            convoCache.map(obj => delete obj.raw_tweet),
+            convoCache['participants']
+          ];
+        }
+      });
+  });
 };
 
 module.exports = {
