@@ -215,4 +215,14 @@ $(function() {
     delay: [100, 100],
     debug: false
   });
+
+  var $help = $('#help');
+  var $helpInst = $help.tooltipster({contentAsHTML: true, maxWidth: 600}).tooltipster('instance');
+  $helpInst.disable();
+  $helpInst.on('after', function() {$helpInst.disable();});
+  $help.click(function() {
+    $helpInst.enable();
+    $helpInst.open();
+    $helpInst.content('CFViewer 😽 makes reading Twitter 🐦 conversations easy by drawing them in a tree 🌳 view.<br><br>This is especially useful when conversations have branches 🌿, which can be a pain 🔫 to read in most Twitter clients. 👌<br><br><strong>How to use: ☝️</strong><br>Simply enter the URL of the top-most tweet in the conversation and press Enter. 😻<br><br>It picks up quoted tweets too, but only sometimes 😿. If you see some missing, try entering the usernames of some tweeps in those tweets in the second textbox.<br><br>Easily share a conversation by sharing the CFViewer URL. 👯<br><br><strong>Limitations 🙅</strong><br>CFViewer can only fetch conversations happened within the last couple of days. 📆<br>Conversations of popular international tweeps 🌟 might not be picked up.<br>Protected accounts break the tree 🐳. Please don\'t do that. 🙏');
+  });
 });

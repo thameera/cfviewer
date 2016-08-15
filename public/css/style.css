@@ -1,11 +1,11 @@
 body {
-  margin-top: 30px;
   margin-bottom: 60px;
   padding: 0;
   font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
 }
 
 #header {
+  margin-top: 30px;
   text-align: center;
 }
 
@@ -131,4 +131,20 @@ a.text-url:hover {
 
 .tooltipster-sidetip .tooltipster-content {
   font-size: 14px;
+}
+
+#help-container {
+  text-align: right;
+}
+
+#help {
+  border-bottom: 2px dotted;
+  margin-left: auto;
+  margin-right: 0;
+  color: #04048c;
+}
+
+#help:hover {
+  cursor: pointer;
+  color: #0d0de6;
 }
