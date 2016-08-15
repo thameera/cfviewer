@@ -108,7 +108,7 @@ const getTweets = (start_url, screennames) => {
   return ar.read('tree').then(convoCache => {
     let cachedTree = [];
     let cachedTweets = [];
-    if (Object.keys(convoCache).length > 0) {
+    if (convoCache.tree) {
       cachedTree = convoCache['tree'];
       cachedTweets = cachedTree.map(t => t.raw_tweet)
       console.log('Initial tree size: ', cachedTree.length);
@@ -125,7 +125,7 @@ const getTweets = (start_url, screennames) => {
           const uniqTweets = _.uniqBy(tweets, 'id_str');
           uniqTweets.reverse(); // sort by time ascending
           const tree = buildTree(root_id, uniqTweets);
-          if (tree['tree'].length === 0 || tree['is_error'] === true) {
+          if (tree['tree'].length === 0) {
             return {
               error: true,
               message: "Oops! I couldn't find that conversation :("
