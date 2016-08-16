@@ -10,10 +10,10 @@ class FileArchive{
     this.tweet_id = tweet_id;
     this.username = username;
 
-    this.dir = (dir !== null) ? dir : process.env.DATA_DIR;
+    this.dir = (dir !== null) ? dir : process.env.DATA_DIR_NAME;
+    this.dir = __dirname + '/' + this.dir;
     if (!fs.lstatSync(this.dir).isDirectory()){
-      logger.error(`${dir} is not a valid directory`);
-      this.dir = __dirname;
+      logger.error(`${this.dir} is not a valid directory`);
     }
   }
 
