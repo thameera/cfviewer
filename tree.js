@@ -133,7 +133,9 @@ const getTweets = (start_url, screennames) => {
 
     return twitter.searchTweets(screennames, start_id)
       .then(tweets => {
-        if (tweets.length > 1){
+        // When there are archived tweets disregard searches that return just
+        // one tweet (which is the tweet with start_id itself)
+        if (!convoCache.tree || tweets.length > 1){
           logger.debug('New tweets: ', tweets.length);
           tweets = tweets.concat(cachedTweets);
           const uniqTweets = _.uniqBy(tweets, 'id_str');
