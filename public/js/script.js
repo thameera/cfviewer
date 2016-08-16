@@ -57,7 +57,7 @@ $(function() {
     var date = t.getFullYear() + '-' + pad(t.getMonth() + 1) + '-' + pad(t.getDate());
     var h = t.getHours();
     var time = (h > 12 ? h%12 : h) + ':' + pad(t.getMinutes()) + (h > 12 ? 'pm' : 'am');
-    return date + ' ' + time + '<br>some things';
+    return date + ' ' + time;
   };
 
   var getTweetSuccessCb = function(res) {
@@ -131,7 +131,7 @@ $(function() {
     // Time tooltip
     $('em a').tooltipster({
       side: 'bottom',
-      delay: [100, 1000000],
+      delay: [100, 100],
       debug: false,
       contentAsHTML: true
     });
