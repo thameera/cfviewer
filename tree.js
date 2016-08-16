@@ -1,6 +1,8 @@
 'use strict';
 
 const _ = require('lodash');
+const logger = require('winston');
+
 const twitter = require('./twitter');
 const archive = require('./archive');
 const utils = require('./utils');
@@ -28,7 +30,7 @@ const getMediaEntities = tweet => {
 };
 
 const buildTree = (root_id, tweets) => {
-  console.log(`Building tree from ${tweets.length} tweets...`);
+  logger.debug(`Building tree from ${tweets.length} tweets...`);
 
   const tree = [];
 
@@ -72,7 +74,7 @@ const buildTree = (root_id, tweets) => {
   };
 
   const iterateRoot = root_id => {
-    console.log(`Iterating for root tweet: ${root_id}`);
+    logger.debug(`Iterating for root tweet: ${root_id}`);
     // Find root tweet
     const root = _.find(tweets, { id_str: root_id });
 
@@ -86,7 +88,7 @@ const buildTree = (root_id, tweets) => {
 
   iterateRoot(root_id);
 
-  console.log(`Final tree length: ${tree.length}`);
+  logger.debug(`Final tree length: ${tree.length}`);
 
   const participants = utils.sortedCount(tree.map(t => t.user));
 
@@ -116,7 +118,7 @@ const getTweets = (start_url, screennames) => {
     if (convoCache.tree) {
       cachedTree = convoCache['tree'];
       cachedTweets = cachedTree.map(t => t.raw_tweet);
-      console.log('Cached tweets: ', cachedTree.length);
+      logger.debug('Archived tweets: ', cachedTree.length);
       start_id = convoCache['meta']['start_from_id'];
     } else {
       start_id = root_id;
@@ -132,7 +134,7 @@ const getTweets = (start_url, screennames) => {
     return twitter.searchTweets(screennames, start_id)
       .then(tweets => {
         if (tweets.length > 1){
-          console.log('New tweets: ', tweets.length);
+          logger.debug('New tweets: ', tweets.length);
           tweets = tweets.concat(cachedTweets);
           const uniqTweets = _.uniqBy(tweets, 'id_str');
           uniqTweets.reverse(); // sort by time ascending
@@ -146,6 +148,7 @@ const getTweets = (start_url, screennames) => {
           ar.write(tree, 'tree');
           return strip_raw_tweets(tree);
         } else {
+          logger.debug('No new tweets in conversation. Serving from archive');
           return strip_raw_tweets(convoCache);
         }
       });

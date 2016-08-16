@@ -12,7 +12,7 @@ class FileArchive{
 
     this.dir = (dir !== null) ? dir : process.env.DATA_DIR;
     if (!fs.lstatSync(this.dir).isDirectory()){
-      console.log(`${dir} is not a valid directory`);
+      logger.error(`${dir} is not a valid directory`);
       this.dir = __dirname;
     }
   }
@@ -26,7 +26,7 @@ class FileArchive{
   read(type){
     return pickDataFile(this.tweet_id, type, this.dir).then((data_file)=> {
       if (!data_file) return {};
-      console.log(`datafile: ${data_file}`);
+      logger.debug(`datafile: ${data_file}`);
       return fs.readFileAsync(data_file, 'utf8')
         .then(JSON.parse);
     });

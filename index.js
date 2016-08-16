@@ -8,7 +8,6 @@ const bodyParser = require('body-parser');
 const cache = require('memory-cache');
 
 const logger = require('./logger');
-const twitter = require('./twitter');
 const tree = require('./tree');
 
 const getCacheKey = (tweetUrl, usernames) => `${tweetUrl}${usernames.sort().join('')}`;
@@ -36,7 +35,7 @@ app.post('/api/get-tweets', (req, res) => {
     return res.json(cached);
   }
 
-  logger.info(`Tweet URL: ${tweetUrl}\nUsernames: ${usernames}`);
+  logger.info(`Tweet URL: ${tweetUrl}\n\tUsernames: ${usernames}`);
 
   tree.getTweets(tweetUrl, usernames)
     .then(tree => {
