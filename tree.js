@@ -90,9 +90,14 @@ const buildTree = (root_id, tweets) => {
 
   const participants = utils.sortedCount(tree.map(t => t.user));
 
+  const meta = {
+    start_from_id: Math.max.apply(null, tweets.map(t => t.id))
+  };
+
   return {
     tree,
-    participants
+    participants,
+    meta
   };
 };
 
@@ -112,7 +117,7 @@ const getTweets = (start_url, screennames) => {
       cachedTree = convoCache['tree'];
       cachedTweets = cachedTree.map(t => t.raw_tweet);
       console.log('Cached tweets: ', cachedTree.length);
-      start_id = Math.max.apply(null, cachedTree.map(t => t.id));
+      start_id = convoCache['meta']['start_from_id'];
     } else {
       start_id = root_id;
     }
