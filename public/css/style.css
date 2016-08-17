@@ -107,6 +107,11 @@ a.text-url:hover {
   color: #246;
 }
 
+/* Arrow pointer on tree nodes (except on actual hyperlinks) */
+a.jstree-anchor {
+  cursor: default;
+}
+
 /* Round border for dp */
 .jstree-icon:empty {
   border-radius: 5px;
