@@ -12,7 +12,7 @@ body {
 #title {
   font-family: "Courier New", Courier, monospace;
   font-size: 32px;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 
 #title a {
@@ -31,18 +31,28 @@ body {
 
 .input-container {
   margin: 4px auto;
-  width: 510px;
+  width: 540px;
   border: 1px solid #d9d9d9;
   padding: 1px;
+  text-align: left;
+}
+
+.input-container#usernames-container {
+  display: none;
 }
 
 input {
   box-sizing: border-box;
   border: none;
   outline: none;
-  width: 500px;
+  width: 530px;
   font-size: 14px;
   margin: 6px;
+  margin-right: 1px;
+}
+
+input#tweet_url {
+  width: 500px;
 }
 
 button {
@@ -53,6 +63,25 @@ button {
   border-radius: 2px;
   color: #757575;
   outline: none;
+}
+
+button#advanced {
+  margin: 0;
+  margin-bottom: 5px;
+  font-size: 20px;
+  height: 20px;
+  vertical-align: middle;
+  padding: 0;
+  background-color: #fff;
+  opacity: 0.5;
+}
+
+button#advanced:hover {
+  opacity: 0.8;
+}
+
+button#advanced:active {
+  opacity: 1.0;
 }
 
 #search {

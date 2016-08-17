@@ -6,6 +6,14 @@ $(function() {
   // Use large version of jstree
   $.jstree.defaults.core.themes.variant = "large";
 
+  var setUsernamesVisibility = function(show) {
+    if (show) {
+      $('#usernames-container').show();
+    } else {
+      $('#usernames-container').hide();
+    }
+  };
+
   // Read a page's GET URL variables and return them as an associative array.
   var getUrlVars = function()
   {
@@ -142,7 +150,11 @@ $(function() {
 
   // Pre-populate values from localStorage
   $('#tweet_url').val(localStorage.getItem('tweetUrl') || '');
-  $('#usernames').val(localStorage.getItem('usernames') || '');
+  var usernames = localStorage.getItem('usernames');
+  $('#usernames').val(usernames || '');
+  if (usernames) {
+    setUsernamesVisibility(true);
+  }
 
   var updateTree = function() {
     var tweetUrl = $('#tweet_url').val();
@@ -166,8 +178,9 @@ $(function() {
       var users = urlVars['users'].split("%20").join(' ');
     }
 
-    $('#tweet_url').val( decodeURIComponent(tweetUrl) || '');
+    $('#tweet_url').val(decodeURIComponent(tweetUrl) || '');
     $('#usernames').val(users || '');
+    if (users) {console.log('dd'); setUsernamesVisibility(true);}
 
     updateTree();
   }
@@ -214,6 +227,11 @@ $(function() {
     this.select();
   });
 
+  $('#advanced').click(function() {
+    // Toggle visibility
+    setUsernamesVisibility(!$('#usernames-container').is(':visible'));
+  });
+
   $('.tooltip').tooltipster({
     side: 'right',
     delay: [100, 100],
@@ -230,4 +248,7 @@ $(function() {
     $helpInst.content('<br>CFViewer 😽 makes reading Twitter 🐦 conversations easy by drawing them in a tree 🌳 view.<br><br>This is especially useful when conversations have branches 🌿, which can be a pain 🔫 to read in most Twitter clients. 👌<br><br><strong>How to use: ☝️</strong><br>Simply enter the URL of the top-most tweet in the conversation and press Enter. 😻<br>Click on the little arrows ▶️ to expand the replies<br><br>It picks up quoted tweets too, but only sometimes 😿. If you see some missing, try entering the usernames of some tweeps in those tweets in the second textbox.<br><br>Easily share a conversation by sharing the CFViewer URL. 👯<br><br><strong>Limitations 🙅</strong><br>CFViewer can only fetch conversations happened within the last couple of days. 📆<br>Conversations of popular international tweeps 🌟 might not be picked up.<br>Protected accounts break the tree 🐳. Please don\'t do that. 🙏<br><br>');
     twemoji.parse(document.body);
   });
+
+  // Render twemoji
+  twemoji.parse(document.body);
 });
