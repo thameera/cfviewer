@@ -167,6 +167,10 @@ a.cfv {
   border-bottom-color: #565656;
 }
 
+.tooltipster-sidetip.tooltipster-top .tooltipster-arrow-border {
+  border-top-color: #565656;
+}
+
 .tooltipster-sidetip .tooltipster-content {
   font-size: 14px;
 }

@@ -237,6 +237,11 @@ $(function() {
     delay: [100, 100],
     debug: false
   });
+  $('.tooltip-top').tooltipster({
+    side: 'top',
+    delay: [100, 100],
+    debug: false
+  });
 
   var $help = $('#help');
   var $helpInst = $help.tooltipster({contentAsHTML: true, maxWidth: 600}).tooltipster('instance');
