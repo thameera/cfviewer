@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "watch": "nodemon index.js"
+    "watch": "nodemon --ignore 'ARCHIVES/*' index.js"
   },
   "author": "",
   "license": "MIT",

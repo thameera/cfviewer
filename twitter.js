@@ -54,7 +54,7 @@ const searchTweets = (screennames, root_id) => {
 
   const doARound = max_id => {
     round++;
-    console.log('Round No: ', round);
+    logger.debug('Search round No: ', round);
     return search(max_id)
       .then(result => {
         if (!result.data || !result.data.statuses) {
