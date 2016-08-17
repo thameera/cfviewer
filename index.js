@@ -7,8 +7,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cache = require('memory-cache');
 
-const logger = require('./logger');
-const tree = require('./tree');
+const logger = require('./lib/logger');
+const tree = require('./lib/tree');
 
 const getCacheKey = (tweetUrl, usernames) => `${tweetUrl}${usernames.sort().join('')}`;
 
