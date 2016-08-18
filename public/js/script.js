@@ -69,8 +69,8 @@ $(function() {
   };
 
   var getTweetSuccessCb = function(res) {
-    if (typeof res === 'string') {
-      return showError();
+    if (res.error === true) {
+      return showError(res.message);
     }
 
     $('#loading').hide();
@@ -98,7 +98,8 @@ $(function() {
     }
   };
 
-  var showError = function() {
+  var showError = function(err) {
+    $('#error').html(err);
     $('#error').show();
     $('#loading').hide();
   };
@@ -180,7 +181,7 @@ $(function() {
 
     $('#tweet_url').val(decodeURIComponent(tweetUrl) || '');
     $('#usernames').val(users || '');
-    if (users) {console.log('dd'); setUsernamesVisibility(true);}
+    if (users) {setUsernamesVisibility(true);}
 
     updateTree();
   }
