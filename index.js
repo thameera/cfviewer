@@ -44,8 +44,9 @@ app.post('/api/get-tweets', (req, res) => {
     });
 });
 
-app.get('/:tweetUrl(https\:\/\/twitter\.com\/[a-z]{2,15}\/status\/[0-9]+)', (req, res) => {
-  res.redirect('/?tweeturl=' + req.params.tweetUrl);
+app.get('/:prot*', (req, res) => {
+  const tweetUrl = req.params.prot + req.params[0];
+  res.redirect('/?tweeturl=' + tweetUrl);
 });
 
 app.listen(process.env.APP_PORT, () => {
