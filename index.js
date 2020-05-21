@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/api/get-tweets', (req, res) => {
-  const valid_tweet = /https\:\/\/twitter\.com\/[a-zA-Z0-9_]{2,15}\/status\/[0-9]+/;
+  const valid_tweet = /^https\:\/\/twitter\.com\/[a-zA-Z0-9_]{2,15}\/status\/[0-9]+/;
   if (!req.body.tweetUrl || !valid_tweet.test(req.body.tweetUrl)) {
     return res.json({error:true, message: "We expect a valid twitter status URL"});
   }
